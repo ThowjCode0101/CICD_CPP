@@ -21,19 +21,17 @@ jobs:
       - name: Run the application
         run: java TestJava
 
-
   buildCpp:
     name: Build main.cpp
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up C++ environment
         run: |
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/local/gcc-14.1.0/bin/g++14.1.0 14
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-14.1.0/bin/gcc14.1.0 14
+          sudo apt-get update
+          sudo apt-get install -y build-essential
 
       - name: Compile main.cpp
         run: g++ main.cpp -o main
