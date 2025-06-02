@@ -1,9 +1,9 @@
-name: Build Java Project
+name: Build Java and C++ Project
 
 on: workflow_dispatch
 
 jobs:
-  build:
+  buildJava:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,3 +20,23 @@ jobs:
 
       - name: Run the application
         run: java TestJava
+
+
+  buildCpp:
+    name: Build main.cpp
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up C++ environment
+        run: |
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/local/gcc-14.1.0/bin/g++14.1.0 14
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-14.1.0/bin/gcc14.1.0 14
+
+      - name: Compile main.cpp
+        run: g++ main.cpp -o main
+
+      - name: Run the application
+        run: ./main

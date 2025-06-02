@@ -1,25 +1,25 @@
-name: Build C++ Project
+# name: Build C++ Project
 
-# on: 
-#   push:
-#     branches:
-#       - main
-on: push
+# # on: 
+# #   push:
+# #     branches:
+# #       - main
+# on: push
 
-jobs:
-  build:
-    name: Build main.cpp
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     name: Build main.cpp
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Set up C++ environment
-        run: sudo apt-get install g++
+#       - name: Set up C++ environment
+#         run: sudo apt-get install g++
 
-      - name: Compile main.cpp
-        run: g++ main.cpp -o main
+#       - name: Compile main.cpp
+#         run: g++ main.cpp -o main
 
-      - name: Run the application
-        run: ./main
+#       - name: Run the application
+#         run: ./main
