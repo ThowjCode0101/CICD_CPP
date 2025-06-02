@@ -1,4 +1,4 @@
-class Main {
+class TestJava {
     private static class MyClass { // Made MyClass static
 
         // Method to print a message

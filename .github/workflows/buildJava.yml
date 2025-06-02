@@ -15,8 +15,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Compile main.java
-        run: javac main.java
+      - name: Compile Java code
+        run: javac TestJava.java
 
       - name: Run the application
-        run: java main
+        run: java TestJava
