@@ -19,7 +19,7 @@ jobs:
         run: sudo apt-get install g++
 
       - name: Compile main.cpp
-        run: g++ src/main.cpp -o main
+        run: g++ main.cpp -o main
 
       - name: Run the application
         run: ./main
