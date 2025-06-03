@@ -1,25 +1,55 @@
 name: CMake Build and Test
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            cppunit-install: sudo apt-get update && sudo apt-get install -y libcppunit-dev
+          - os: windows-latest
+            cppunit-install: |
+              C:/msys64/usr/bin/pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-cppunit
+              echo "C:/msys64/ucrt64/bin" >> $GITHUB_PATH
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
 
+    - name: Cache CppUnit
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pacman/pkg
+          /var/cache/apt/archives
+        key: ${{ runner.os }}-cppunit-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-cppunit-
+
     - name: Install CppUnit
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libcppunit-dev
+      run: ${{ matrix.cppunit-install }}
+      shell: bash
 
     - name: Configure CMake
       run: |
+        rm -rf build
         cmake -B build -DCMAKE_BUILD_TYPE=Release
+      shell: bash
 
     - name: Build
       run: cmake --build build --config Release
+      shell: bash
 
     - name: Test
       working-directory: build
       run: ctest --output-on-failure -C Release
+      shell: bash
