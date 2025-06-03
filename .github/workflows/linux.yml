@@ -1,0 +1,45 @@
+name: Linux Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache APT packages
+      uses: actions/cache@v3
+      with:
+        path: /var/cache/apt/archives
+        key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: ${{ runner.os }}-apt-
+
+    - name: Install CppUnit
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libcppunit-dev
+      shell: bash
+
+    - name: Configure CMake
+      run: |
+        rm -rf build
+        cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
+      shell: bash
+
+    - name: Build
+      run: |
+        cmake --build build --config Release
+      shell: bash
+
+    - name: Test
+      working-directory: build
+      run: |
+        ctest --output-on-failure -C Release
+      shell: bash

@@ -25,53 +25,96 @@ CICD_CPP/
 - C++ Compiler (GCC/MinGW)
 - CppUnit library
 
-### Windows with MSYS2
-```powershell
-# Install CppUnit using MSYS2
-pacman -S mingw-w64-ucrt-x86_64-cppunit
+### Windows Setup
+
+1. Install MSYS2:
+```cmd
+choco install -y msys2
 ```
 
-### Linux
+2. Install required packages:
+```cmd
+C:\msys64\usr\bin\pacman.exe -Syu --noconfirm
+C:\msys64\usr\bin\pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-gcc
+C:\msys64\usr\bin\pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-cppunit
+```
+
+3. Add MinGW to PATH:
+```cmd
+set PATH=C:\msys64\ucrt64\bin;%PATH%
+```
+
+### Linux Setup
 ```bash
-# Install CppUnit
+# Update package list and install required packages
 sudo apt-get update
-sudo apt-get install -y libcppunit-dev
+sudo apt-get install -y build-essential cmake libcppunit-dev
 ```
 
 ## Building the Project
 
-1. Configure CMake:
-```powershell
-# For Windows with MinGW
-cmake -G "MinGW Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
+### Windows (Command Prompt)
 
-# For Linux
+1. Configure CMake:
+```cmd
+if exist build rd /s /q build
+cmake -G "MinGW Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
+```
+
+2. Build:
+```cmd
+cmake --build build --config Release
+```
+
+### Linux
+
+1. Configure CMake:
+```bash
+rm -rf build
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 ```
 
-2. Build the project:
-```powershell
-cmake --build build
+2. Build:
+```bash
+cmake --build build --config Release
 ```
 
 ## Running Tests
 
-From the project root directory:
-```powershell
+### Windows (Command Prompt)
+```cmd
 cd build
-ctest --output-on-failure
+ctest --output-on-failure -C Release
+cd ..
+```
+
+### Linux
+```bash
+cd build
+ctest --output-on-failure -C Release
+cd ..
 ```
 
 ## Continuous Integration
 
-This project uses GitHub Actions for CI/CD. The workflow:
+This project uses GitHub Actions for CI/CD with separate workflows for Windows and Linux:
+
+### Windows Workflow
+- Uses MSYS2 and MinGW-w64 toolchain
+- Builds the project on Windows
+- Runs the test suite
+- Located in `.github/workflows/windows.yml`
+
+### Linux Workflow
+- Uses GCC and APT package manager
 - Builds the project on Ubuntu Linux
 - Runs the test suite
-- Triggers on:
-  - Push to main branch
-  - Pull requests to main branch
+- Located in `.github/workflows/linux.yml`
 
-See `.github/workflows/cmake.yml` for the complete workflow configuration.
+Triggers for both workflows:
+- Push to main branch
+- Pull requests to main branch
+- Manual trigger (workflow_dispatch)
 
 ## Project Components
 

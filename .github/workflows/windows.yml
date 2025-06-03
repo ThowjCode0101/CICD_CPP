@@ -1,0 +1,49 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache MSYS2 packages
+      uses: actions/cache@v3
+      with:
+        path: C:\msys64\var\cache\pacman\pkg
+        key: ${{ runner.os }}-msys2-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: ${{ runner.os }}-msys2-
+
+    - name: Install MSYS2 and CppUnit
+      run: |
+        choco install -y --no-progress msys2
+        call RefreshEnv.cmd
+        C:\msys64\usr\bin\pacman.exe -Syu --noconfirm
+        C:\msys64\usr\bin\pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-gcc
+        C:\msys64\usr\bin\pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-cppunit
+        echo C:\msys64\ucrt64\bin>> "%GITHUB_PATH%"
+      shell: cmd
+
+    - name: Configure CMake
+      run: |
+        if exist build rd /s /q build
+        cmake -G "MinGW Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
+      shell: cmd
+
+    - name: Build
+      run: |
+        cmake --build build --config Release
+      shell: cmd
+
+    - name: Test
+      working-directory: build
+      run: |
+        ctest --output-on-failure -C Release
+      shell: cmd
