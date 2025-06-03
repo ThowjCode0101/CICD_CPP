@@ -1,10 +1,10 @@
-Start testing: Jun 03 23:32 SE Asia Standard Time
+Start testing: Jun 04 00:03 SE Asia Standard Time
 ----------------------------------------------------------
 1/1 Testing: HelloTest
 1/1 Test: HelloTest
 Command: "C:/WORK/CODE/CICD/CICD_CPP/build/tests/hello_test.exe"
 Directory: C:/WORK/CODE/CICD/CICD_CPP/build/tests
-"HelloTest" start time: Jun 03 23:32 SE Asia Standard Time
+"HelloTest" start time: Jun 04 00:03 SE Asia Standard Time
 Output:
 ----------------------------------------------------------
 Test::testHelloWorld : OK
@@ -12,8 +12,8 @@ Test::testHelloWorld : OK
 Test time =   0.02 sec
 ----------------------------------------------------------
 Test Passed.
-"HelloTest" end time: Jun 03 23:32 SE Asia Standard Time
+"HelloTest" end time: Jun 04 00:03 SE Asia Standard Time
 "HelloTest" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jun 03 23:32 SE Asia Standard Time
+End testing: Jun 04 00:03 SE Asia Standard Time

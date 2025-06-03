@@ -269,6 +269,12 @@ HelloWorld_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 HelloWorld_SOURCE_DIR:STATIC=C:/WORK/CODE/CICD/CICD_CPP
 
+//Path to a program.
+MINGW_GCC:FILEPATH=C:/msys64/ucrt64/bin/gcc.exe
+
+//Path to a program.
+MINGW_GPP:FILEPATH=C:/msys64/ucrt64/bin/g++.exe
+
 
 ########################
 # INTERNAL cache entries

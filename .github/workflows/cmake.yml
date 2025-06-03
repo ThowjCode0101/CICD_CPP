@@ -10,46 +10,60 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
             cppunit-install: sudo apt-get update && sudo apt-get install -y libcppunit-dev
+            generator: Unix Makefiles
           - os: windows-latest
             cppunit-install: |
-              C:/msys64/usr/bin/pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-cppunit
-              echo "C:/msys64/ucrt64/bin" >> $GITHUB_PATH
+              choco install -y --no-progress msys2
+              refreshenv
+              C:\msys64\usr\bin\pacman.exe -Syu --noconfirm
+              C:\msys64\usr\bin\pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-gcc
+              C:\msys64\usr\bin\pacman.exe -S --noconfirm mingw-w64-ucrt-x86_64-cppunit
+              echo "C:\msys64\ucrt64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            generator: MinGW Makefiles
 
     runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Cache CppUnit
+    - name: Cache MSYS2 packages
+      if: runner.os == 'Windows'
       uses: actions/cache@v3
       with:
-        path: |
-          ~/.cache/pacman/pkg
-          /var/cache/apt/archives
-        key: ${{ runner.os }}-cppunit-${{ hashFiles('**/CMakeLists.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-cppunit-
+        path: C:\msys64\var\cache\pacman\pkg
+        key: ${{ runner.os }}-msys2-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: ${{ runner.os }}-msys2-
+
+    - name: Cache APT packages
+      if: runner.os == 'Linux'
+      uses: actions/cache@v3
+      with:
+        path: /var/cache/apt/archives
+        key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: ${{ runner.os }}-apt-
 
     - name: Install CppUnit
       run: ${{ matrix.cppunit-install }}
-      shell: bash
+      shell: pwsh
 
     - name: Configure CMake
       run: |
-        rm -rf build
-        cmake -B build -DCMAKE_BUILD_TYPE=Release
-      shell: bash
+        Remove-Item -Path build -Recurse -Force -ErrorAction SilentlyContinue
+        cmake -G "${{ matrix.generator }}" -B build -DCMAKE_BUILD_TYPE=Release
+      shell: pwsh
 
     - name: Build
-      run: cmake --build build --config Release
-      shell: bash
+      run: |
+        cmake --build build --config Release
+      shell: pwsh
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure -C Release
-      shell: bash
+      run: |
+        ctest --output-on-failure -C Release
+      shell: pwsh
