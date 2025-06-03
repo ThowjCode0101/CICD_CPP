@@ -1,0 +1,12 @@
+C:/WORK/CODE/CICD/CICD_CPP/build/CMakeFiles/test.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/CMakeFiles/edit_cache.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/CMakeFiles/rebuild_cache.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/src/CMakeFiles/hello_lib.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/src/CMakeFiles/hello_app.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/src/CMakeFiles/test.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/src/CMakeFiles/edit_cache.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/src/CMakeFiles/rebuild_cache.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/tests/CMakeFiles/hello_test.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/tests/CMakeFiles/test.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/tests/CMakeFiles/edit_cache.dir
+C:/WORK/CODE/CICD/CICD_CPP/build/tests/CMakeFiles/rebuild_cache.dir
