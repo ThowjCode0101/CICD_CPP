@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"C:/WORK/CODE/CICD/CICD_CPP/build/cmake_install.cmake",
-		"C:/WORK/CODE/CICD/CICD_CPP/build/src/cmake_install.cmake",
-		"C:/WORK/CODE/CICD/CICD_CPP/build/tests/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

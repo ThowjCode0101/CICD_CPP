@@ -1,2 +1,0 @@
-C:\msys64\ucrt64\bin\ar.exe qc libhello_lib.a CMakeFiles/hello_lib.dir/hello.cpp.obj
-C:\msys64\ucrt64\bin\ranlib.exe libhello_lib.a
