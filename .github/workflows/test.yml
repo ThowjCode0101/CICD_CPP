@@ -15,33 +15,46 @@ jobs:
         shell: bash -l {0}
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Configure
-      run: |
-        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Debug
+      - name: Configure
+        run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Debug
 
-    - name: Build
-      run: |
-        cmake --build build --config Debug
+      - name: Build
+        run: cmake --build build --config Debug
 
-    - name: Test
-      run: |
-        cd build
-        ctest -C Debug --output-on-failure --verbose
+      - name: Test
+        run: |
+          cd build
+          # Add --output-junit if you want JUnit XML output for artifact upload
+          ctest -C Debug --output-on-failure --verbose
 
-    - name: Setup python
-      uses: actions/setup-python@v2
-      if: contains(matrix.os, 'ubuntu')
-      with:
-        python-version: 3.8
+      - name: Get current time
+        uses: josStorer/get-current-time@v2.0.2
+        id: current-time
+        with:
+          format: YYYY-MM-DD-HH-mm
 
-    - name: Upload code coverage to coveralls
-      if: contains(matrix.os, 'ubuntu')
-      env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip setuptools cpp-coveralls
-        coveralls -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*" --exclude "venv" --exclude "build/_deps"
+      - name: Save test report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.os }}-${{ github.run_number }}-${{ steps.current-time.outputs.formattedTime }}
+          path: build/Testing/**/*.xml
+          retention-days: 30
+
+      # - name: Setup python
+      #   uses: actions/setup-python@v2
+      #   if: contains(matrix.os, 'ubuntu')
+      #   with:
+      #     python-version: 3.8
+
+      # - name: Upload code coverage to coveralls
+      #   if: contains(matrix.os, 'ubuntu')
+      #   env:
+      #     COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+      #   run: |
+      #     python -m venv venv
+      #     source venv/bin/activate
+      #     pip install --upgrade pip setuptools cpp-coveralls
+      #     coveralls -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*" --exclude "venv" --exclude "build/_deps"
